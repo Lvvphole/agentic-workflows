@@ -10,10 +10,10 @@ Use this order for a normal code or workflow change:
 
 1. Receive a pull request or push event.
 2. Run deterministic CI.
-3. Record deterministic PASS or FAIL.
+3. Record deterministic `PASS` or `FAIL`.
 4. Block merge when a required check fails.
-5. Merge only after the required checks pass and merge authority exists.
-6. Run deterministic CD after the accepted main-branch state exists.
+5. Merge only after required checks pass and merge authority exists.
+6. Run deterministic CD after an accepted main-branch state exists.
 7. Deploy to staging when the deployment contract permits it.
 8. Require production authorization before production promotion.
 9. Deploy the exact accepted artifact to production.
@@ -25,13 +25,13 @@ Do not let an agentic workflow skip a stage in this sequence.
 
 ### CI Doctor
 
-Trigger only from a deterministic CI failure or an explicit manual run.
+Trigger only from a deterministic CI failure or explicit manual run.
 
 Read the failed run evidence.
 
 Produce a diagnosis report.
 
-The initial rollout is report-only.
+Keep the initial rollout report-only.
 
 ### PR Evidence Reviewer
 
@@ -43,9 +43,9 @@ Do not produce the acceptance result.
 
 ### Documentation Drift
 
-Run after an accepted change or on an explicit review event.
+Run after an accepted change or explicit review event.
 
-Report documentation that is inconsistent with the accepted behavior.
+Report documentation that conflicts with accepted behavior.
 
 ### Repository Health
 
@@ -59,21 +59,69 @@ Keep this role disabled during the initial rollout.
 
 Enable it only after report-only CI Doctor behavior has a separate acceptance record.
 
-When enabled, allow one bounded repair candidate per trigger unless the active contract defines a smaller limit.
+## Review-repair envelope
 
-## Repair envelope
+Use one accepted finding for one repair candidate.
 
-A repair must stay inside the path set that the active task authorizes.
+Change one file for one review-repair candidate.
 
-A repair must not add unrelated behavior.
+Create one commit for one accepted review-repair candidate.
 
-A repair must not add a new file unless the active contract requires that file.
+Keep the repair inside the authorized path set.
 
-A repair must not increase line count when the active repair contract prohibits line growth.
+Do not add unrelated behavior.
 
-Use at most two repair attempts for one failed gate unless a smaller bound applies.
+Do not add a new file during review repair.
 
-After the bound is exhausted, stop and return `BLOCKED`.
+Do not expand architecture or public surface during review repair.
+
+Do not increase line count when the active repair contract prohibits line growth.
+
+Use at most two repair attempts for one failed gate.
+
+Do not make a third repair attempt.
+
+After the second failed attempt, preserve the candidate and return `BLOCKED`.
+
+Repair exhaustion does not authorize exploration, scope growth, test changes, or a new repair strategy.
+
+## Complete-failure lifecycle
+
+Enter this lifecycle only after an authoritative verifier or explicit human decision declares complete failure.
+
+Stop mutation of the failed pull request.
+
+Do not patch the failed pull request or add another repair attempt to its branch.
+
+Close the failed pull request.
+
+Keep the closed pull request and failed head SHA as frozen evidence.
+
+Record the accepted base SHA, failed head SHA, diff, failed gates, findings, and relevant run evidence.
+
+Convert the failure evidence into successor acceptance criteria and learning corpus.
+
+Do not weaken the predecessor oracle, tests, findings, or failure evidence.
+
+Start the redesign from the last accepted base, not from the failed head.
+
+Create a new branch for the redesign.
+
+Redesign the architecture from the frozen failure evidence and new verified context.
+
+Run required deterministic tests on the materialized successor before publication.
+
+Verify the exact successor candidate before publication.
+
+Record commands, results, candidate identities, and hashes before publication.
+
+Show the verification evidence before publication.
+
+Do not create the successor commit until the required local evidence exists.
+
+After the evidence exists, commit the verified bytes and push that commit.
+
+Open a new pull request only from the verified successor branch.
 
 ## Stop conditions
 
@@ -81,8 +129,8 @@ Stop immediately when one of these conditions exists:
 
 - Required authority is missing.
 - The required verifier is unavailable.
-- Repository state changed after the candidate identity was recorded.
-- A repair would require scope expansion.
+- Repository state changed after candidate identity was recorded.
+- A repair requires scope expansion.
 - A protected state transition lacks explicit authority.
 - The repair-attempt bound is exhausted.
 

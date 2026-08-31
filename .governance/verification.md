@@ -6,9 +6,9 @@ Define the acceptance contract for deterministic CI/CD and workflow catalog chan
 
 ## Acceptance invariant
 
-The verifier decides PASS or FAIL.
+The verifier decides `PASS` or `FAIL`.
 
-The model does not decide PASS or FAIL.
+The model does not decide `PASS` or `FAIL`.
 
 ## Candidate identity
 
@@ -17,7 +17,7 @@ Bind verification to the exact candidate.
 Record at least:
 
 - Repository.
-- Commit SHA.
+- Commit SHA or materialized candidate digest before commit.
 - Changed path set.
 - Workflow source SHA-256 when an agentic workflow source changed.
 - Compiled `.lock.yml` SHA-256 when a lock file exists.
@@ -38,9 +38,19 @@ Do not use coverage percentage as proof of correctness.
 
 Use behavior-specific tests for the required contract.
 
+## Public-surface verification
+
+Evaluate public-surface invariants against the materialized baseline and candidate.
+
+Use a language-aware deterministic parser, schema comparator, or equivalent semantic verifier.
+
+Do not use lexical patch matching as the sole public-surface verifier.
+
+Return `BLOCKED` when no trusted comparator exists for the affected artifact type.
+
 ## Agentic workflow verification
 
-For a new or changed agentic workflow, verify the source contract and the compiled execution contract.
+For a new or changed agentic workflow, verify the source contract and compiled execution contract.
 
 For a frontmatter change:
 
@@ -57,6 +67,21 @@ For a body-only change:
 
 Do not accept a workflow only because it compiles.
 
+## Frozen governance acceptance cases
+
+Runtime governance must preserve deterministic cases for these failures:
+
+1. Reject an incomplete active contract.
+2. Reject a review-repair mutation that violates required predicates.
+3. Reject an out-of-scope read.
+4. Keep post-action evidence bound to the accepted proposal contract.
+5. Reject false mandatory review-repair predicates.
+6. Reject Python public-surface growth at net-zero lines.
+7. Reject a symlink path that resolves outside the repository.
+8. Reject a post-action result without its exact accepted proposal.
+
+Do not remove or weaken a valid frozen case to make a candidate pass.
+
 ## Independent verification unavailable
 
 When required independent verification is unavailable:
@@ -64,5 +89,5 @@ When required independent verification is unavailable:
 - Return `BLOCKED`.
 - Preserve the candidate.
 - Report that a candidate exists but is not accepted.
-- Use a deterministic local gate only when the governing contract designates that gate as an acceptance authority.
+- Use a deterministic local gate only when the governing contract designates that gate as acceptance authority.
 - Request human authorization before substituting a different verifier.
