@@ -2,76 +2,84 @@
 
 ## Purpose
 
-Define who can authorize a state change and what evidence can support acceptance.
+Define who or what may authorize work, acceptance, and repository state transitions.
 
-## Human authority
+## Human Authority
 
-An explicit human instruction defines the permitted task scope.
+An explicit human instruction defines permitted task scope.
 
-A model can request authority.
+A model may request authority. A model cannot grant authority to itself.
 
-A model cannot grant authority to itself.
+Silence, tool access, memory, prior work, repository visibility, or verifier output does not create new human authority.
 
-Silence, tool access, memory, or a prior task does not grant new authority.
+## Task Contract Admission
 
-## Contract admission
+`CONTEXT.md` selects the active task contract. Routing does not grant authority.
 
-A contract gives no authority until the complete contract passes its authoritative schema.
+A contract is admissible only when its required identity, scope, inputs, predicates, verifier, and stop conditions are complete and valid.
 
-Validate all required fields, values, budgets, paths, predicates, identifiers, and task types.
+An invalid or unresolved required contract field returns `BLOCKED`.
 
-Partial, malformed, unknown, or invalid contract state gives zero authority.
+A task contract may narrow repository governance. It cannot weaken it or enlarge explicit human scope.
 
-Return `BLOCKED` when complete contract validation fails.
+## Engineering Rules Authority
 
-Mandatory predicates are admission requirements, not optional enforcement switches.
+For code-capable work, the canonical engineering-rules authority is the content-addressed `engineering-rules` artifact approved for this repository.
 
-A required predicate must equal `true` when the active task class requires that predicate.
+Expected canonical document identity:
 
-A missing, false, null, malformed, or unknown required predicate invalidates the contract.
+- logical location: `engineering-rules/SKILL.md`
+- SHA-256: `b17fe4f491dd5c2dc5d3edda5c02147492aca81cafb956f7e02d69069e8217fb`
 
-Do not interpret a false mandatory predicate as permission to skip an invariant.
+Expected deterministic gate identity:
 
-## Acceptance authority
+- logical location: `engineering-rules/scripts/check.py`
+- SHA-256: `442f76990f8037d5e680a07a4283cb3f5be9e8bb93801306c74a6c26eef6ba75`
+
+Before code-capable mutation, the active task contract must resolve the canonical document, verify the required identity when available, read it, and satisfy its Pre-Code Readiness Gate.
+
+If the canonical authority is missing, mismatched, or unreadable, return `BLOCKED`. Do not substitute a reconstructed or unverified rules document.
+
+## Acceptance Authority
 
 A deterministic verifier is the default acceptance authority for an automated gate.
 
-An authorized human can accept a candidate when the active contract permits human acceptance.
+An authorized human may accept a candidate when the active contract permits human acceptance.
 
-An agentic workflow cannot accept its own output.
+The proposer, executor, coding agent, or agentic workflow cannot accept its own output.
 
-## State-transition authority
+A test result is evidence. It becomes acceptance evidence only through the verifier selected by the active contract.
 
-The following actions are protected state transitions:
+## Remote Mutation Authority
 
-- Merge a pull request.
-- Push directly to a protected branch.
-- Create or rotate a credential.
-- Change branch protection or a ruleset.
-- Publish a release.
-- Promote a deployment to production.
-- Change an organization-wide agentic workflow policy.
+Any remote repository mutation requires explicit task authority for that operation. A verifier result never grants remote-write authority.
 
-Do not perform a protected state transition without explicit human authority for that transition.
+Examples include closing or reopening a pull request, creating or pushing a branch, opening a pull request, changing pull-request metadata, requesting reviews, or posting a state-changing safe output.
+
+## Protected State Transitions
+
+These transitions require explicit human authority for the transition itself:
+
+- merge a pull request;
+- push directly to a protected branch;
+- create or rotate a credential;
+- change branch protection or a ruleset;
+- publish a release;
+- promote a deployment to production;
+- change organization-wide agentic workflow policy.
+
+Verification success does not supply this authority.
 
 ## Delegation
 
-Delegation can narrow authority.
-
-Delegation cannot expand authority.
+Delegation may narrow authority. Delegation cannot expand authority.
 
 Give a called workflow, sub-agent, or tool only the authority required for its declared operation.
 
-## Evidence classes
+## Evidence Classes
 
-Use these evidence classes:
+- `VERIFIED`: an authoritative deterministic verifier or authorized human confirmed the fact within its jurisdiction.
+- `OBSERVED`: a repository or tool read returned the fact but acceptance authority has not confirmed it.
+- `INFERRED`: reasoning derived the fact from other information.
 
-- `VERIFIED`: An authoritative deterministic check or authorized human confirmed the fact.
-- `OBSERVED`: A tool or repository read returned the fact, but no acceptance authority confirmed it.
-- `INFERRED`: Reasoning derived the fact from other information.
-
-Only `VERIFIED` evidence can satisfy an acceptance gate.
-
-`OBSERVED` and `INFERRED` information can select the next read or test.
-
-They cannot cause an acceptance state transition by themselves.
+Only `VERIFIED` evidence may satisfy an acceptance gate. `OBSERVED` and `INFERRED` material may select the next read, test, or proposal but cannot cause an acceptance state transition.

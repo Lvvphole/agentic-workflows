@@ -4,290 +4,125 @@
 
 Use one central repository as the source of truth for reusable deterministic and agentic GitHub workflows.
 
-Separate coding-agent governance, task/context routing, agent runtime policy, and deterministic enforcement.
+Separate repository orientation, task routing, task authority, stable governance, engineering readiness, implementation, testing, verification, evidence, and completion.
 
 Keep deterministic acceptance separate from agentic reasoning.
 
-## Problem context
+## Canonical Repository Lifecycle
 
-The repository portfolio contains different languages, test systems, deployment targets, and governance rules. One identical CI/CD file cannot verify all repositories correctly.
+```text
+AGENTS
+   ↓
+CONTEXT
+   ↓
+TASK CONTRACT
+   ↓
+GOVERNANCE
+   ↓
+ENGINEERING-RULES
+   ↓
+PRE-CODE READINESS
+   ↓
+BUILD / REPAIR
+   ↓
+TEST
+   ↓
+VERIFY
+   ↓
+EVIDENCE
+   ↓
+COMPLETE
+```
 
-The control plane must provide common policy without replacing repository-specific verification.
+The responsibilities are distinct:
 
-Coding-agent instructions also serve a different purpose from workflow runtime instructions. Repository governance must not be confused with task routing or executable enforcement.
+- `AGENTS.md`: repository map and universal coding-agent obligations.
+- `CONTEXT.md`: Layer-1 task router only.
+- `.harness/contracts/<task>.md`: Layer-2 task envelope, admitted inputs, required process, outputs, and verifier.
+- `.governance/*`: stable Layer-3 governing rules.
+- canonical engineering rules: construction readiness for code-capable work.
+- `.governance/testing.md`: checks that must run.
+- `.governance/verification.md`: what counts as proof and which verifier decides.
+- `.governance/evidence.md`: provenance and exact-candidate binding.
+- `.governance/completion.md`: terminal-state rules.
 
-## Control surfaces
+Routing does not grant authority. A task contract cannot weaken governance. Testing is not verification. Verification is not completion.
+
+## Control Surfaces
 
 ### Coding-agent governance
 
-Root `AGENTS.md` is the repository-wide governance surface for coding agents.
+Root `AGENTS.md` is the repository operating map for coding agents. It does not classify tasks or duplicate detailed downstream policy.
 
-Codex reads `AGENTS.md` directly.
+Root `CLAUDE.md` contains only `@AGENTS.md`.
 
-Root `CLAUDE.md` contains only `@AGENTS.md` so Claude Code receives the same governance rather than a second policy copy.
+### Task routing
 
-`AGENTS.md` defines universal repository rules. It does not classify tasks or select working context.
+Root `CONTEXT.md` selects exactly one most-specific task route and task contract. It does not enumerate the downstream inputs owned by the selected contract.
 
-A nested `AGENTS.md`, if later required, may specialize compatible rules for its subtree without expanding human authority.
+### Task contracts
 
-### Task and context routing
-
-Root `CONTEXT.md` is the workspace task router.
-
-It classifies the explicit task and selects the smallest sufficient context route.
-
-When an accepted stage or subsystem later requires a nested `CONTEXT.md`, the root router must select that scope before the nested context is loaded.
-
-Use this context model:
+Each task contract uses the same Layer-2 shape:
 
 ```text
-CODING AGENT ENTRY
-        |
-        v
-    AGENTS.md
- universal governance
-        |
-        v
-    CONTEXT.md
- workspace task router
-        |
-        v
-active task or stage contract
-        |
-        v
-routed governance / architecture / references
-        |
-        v
-working evidence and candidate artifacts
+Inputs
+  ↓
+Process
+  ↓
+Outputs
 ```
 
-Routing selects information and process. Routing does not grant authority or decide acceptance.
+The contract freezes task-specific scope, prohibitions, required evidence, engineering-rules applicability, deterministic checks, verifier, and stop conditions.
 
-### Agent runtime policy
+### Engineering readiness
 
-Repository coding-agent governance is not the runtime policy for installed agentic workflows.
-
-Agentic workflow runtime behavior is defined by its workflow source, capability frontmatter, imported shared policy, compiled execution contract, and platform-enforced permission boundaries.
-
-Do not assume a runtime agent obeys `AGENTS.md` merely because the workflow source lives in this repository.
+For code-capable work, the active task contract resolves the canonical engineering-rules authority through `.governance/authority.md` and requires its Pre-Code Readiness Gate before mutation.
 
 ### Deterministic enforcement
 
-Use tools, middleware, hooks, GitHub permissions, safe outputs, CI gates, branch or environment protection, and deterministic verifiers for constraints that require mechanical enforcement.
+Use tests, parsers, schema checks, hooks, middleware, platform permissions, safe outputs, CI gates, and verifiers when mechanical enforcement is required. Do not rely on prompt prose where an executable interlock controls the failure surface more directly.
 
-Do not rely on prompt prose alone when a recurring failure requires an execution-time interlock.
+Keep verifier, acceptance oracle, and protected-state authority outside the model's self-acceptance surface.
 
-When evidence shows that a rule is enforced at the wrong component level, redesign at the smallest stronger component that directly controls the failure surface.
-
-Keep verifier, acceptance oracle, and protected-state authority outside the model's self-modifiable surface.
-
-## Harness engineering principle
-
-Treat the coding-agent or workflow harness as a set of separable components rather than one large prompt.
-
-A recurring failure should be mapped to the component that can directly observe or control it, such as:
-
-- repository governance;
-- task/context routing;
-- workflow instructions;
-- tool description;
-- tool implementation;
-- middleware or hook;
-- reusable skill;
-- bounded memory;
-- platform permission or safe output;
-- deterministic verifier.
-
-Every harness change must remain attributable to exact evidence and exact candidate identity.
-
-Do not keep adding prose when a tool, middleware, hook, or deterministic gate is the correct enforcement surface.
-
-## Considered alternatives
-
-### One identical workflow for every repository
-
-Reject this option.
-
-It would hide repository-specific contracts and would create false confidence when a generic check passes.
-
-### Agent-controlled CI/CD
-
-Reject this option.
-
-A model can analyze evidence, but it cannot be the authority that accepts its own work or deploys production state.
-
-### AGENTS.md as task router
-
-Reject this option.
-
-`AGENTS.md` governs coding-agent behavior. Root `CONTEXT.md` owns workspace task and context routing.
-
-### Duplicate Claude and Codex governance
-
-Reject this option.
-
-`CLAUDE.md` points to the same root `AGENTS.md` used by Codex so governance does not drift across coding agents.
-
-### Shared control plane with repository profiles
-
-Accept this option.
-
-It centralizes reusable workflow definitions and policy. It preserves local deterministic gates where a repository needs them.
-
-## Control-plane pipeline
-
-```text
-EVENT
-  |
-  v
-DETERMINISTIC CI
-  |
-  +-- FAIL --> AGENTIC CI DOCTOR --> report or later bounded repair candidate
-  |
-  v
-DETERMINISTIC ACCEPTANCE
-  |
-  v
-MERGE GATE
-  |
-  v
-DETERMINISTIC CD
-  |
-  v
-STAGING
-  |
-  v
-PRODUCTION AUTHORIZATION
-  |
-  v
-PRODUCTION
-  |
-  v
-POST-DEPLOY VERIFICATION
-```
-
-Parallel agentic workflows can review pull requests, detect documentation drift, and report repository health.
-
-They cannot produce the acceptance decision.
-
-## Decision and evidence flow
-
-Use this state-transition model:
-
-```text
-human task and authority
-        |
-        v
-AGENTS.md governance
-        |
-        v
-CONTEXT.md route
-        |
-        v
-bounded observation and reasoning
-        |
-        v
-candidate or proposed action
-        |
-        v
-deterministic verification / policy enforcement
-        |
-   PASS | FAIL | BLOCKED
-        |
-        v
-authorized state transition, if separately permitted
-```
-
-`OBSERVED` and `INFERRED` information may guide the next read, test, or proposal.
-
-Only the required `VERIFIED` evidence may satisfy an acceptance gate.
-
-A protected state transition still requires its own authority even after verification passes.
-
-## Target repository shape
-
-The repository will grow to this shape as each capability is implemented:
+## Target Repository Shape
 
 ```text
 agentic-workflows/
-├── AGENTS.md                      # coding-agent governance
-├── CLAUDE.md                      # @AGENTS.md only
-├── CONTEXT.md                     # workspace task/context router
+├── AGENTS.md
+├── CLAUDE.md
+├── CONTEXT.md
 ├── ARCHITECTURE.md
-├── README.md
-├── aw.yml                         # add with the first valid installable package
+├── .harness/
+│   └── contracts/
+│       ├── read-only.md
+│       ├── governance-bootstrap.md
+│       ├── governance-architecture.md
+│       ├── mutation.md
+│       ├── bug-fix.md
+│       ├── review-repair.md
+│       ├── deterministic-ci-cd.md
+│       ├── agentic-workflow.md
+│       ├── release-consumer.md
+│       └── complete-failure.md
 ├── .governance/
 │   ├── authority.md
 │   ├── execution.md
-│   ├── verification.md
 │   ├── security.md
+│   ├── testing.md
+│   ├── verification.md
 │   ├── evidence.md
 │   ├── releases.md
 │   └── completion.md
-├── .github/
-│   ├── CODEOWNERS
-│   ├── pull_request_template.md
-│   ├── aw/
-│   │   └── actions-lock.json      # compiler-managed after first agentic compile
-│   └── workflows/
-│       └── catalog-ci.yml         # deterministic validation of this catalog
-├── workflows/
-│   ├── ci-doctor.md
-│   ├── pr-evidence-review.md
-│   ├── documentation-drift.md
-│   ├── repository-health.md
-│   └── bounded-repair.md          # later autonomy phase
-├── shared/
-│   ├── agent-policy.md
-│   ├── security-policy.md
-│   └── evidence-policy.md
-├── payload/
-│   └── actions/
-│       ├── ci-python.yml
-│       ├── ci-node.yml
-│       └── deploy-profile.yml
-└── tests/
-    ├── contracts/
-    └── fixtures/
+└── <runtime and workflow implementation added only by accepted increments>
 ```
 
-Do not create placeholder files only to make this tree exist. Add a path when an accepted increment needs that path.
+Do not create placeholder runtime files only to make a future tree exist.
 
-Do not add stage directories, nested `CONTEXT.md` files, tools, middleware, hooks, or other harness components until verified evidence and an accepted increment require them.
+## Control-Plane Invariants
 
-## Distribution boundaries
-
-Use top-level `workflows/` for installable agentic workflow sources.
-
-Use `shared/` for reusable agentic runtime components that consumers import by a pinned ref.
-
-Use `payload/actions/` for inert deterministic workflow source files that the package manifest installs into a consuming repository.
-
-Use `.github/workflows/` only for deterministic workflows that validate this central repository itself.
-
-This separation prevents catalog payload workflows from executing in the catalog repository.
-
-## Quality attributes
-
-The design prioritizes these attributes:
-
-- Reproducibility: consumers pin approved versions and compiled actions use immutable references.
-- Auditability: acceptance evidence identifies the exact commit, source, lock file, and verifier result.
-- Least privilege: agent jobs are read-only and external writes use safe outputs.
-- Bounded autonomy: agentic workflows can propose actions but cannot merge or deploy production state.
-- Context economy: routing loads only the context required for the active task.
-- Component observability: governance, routing, runtime policy, enforcement, and verification remain distinct surfaces.
-- Decision observability: consequential changes remain tied to evidence, predicted purpose, exact candidate identity, and verifier outcomes.
-- Evolvability: repository profiles can change without forcing one global implementation on every repository.
-
-## Consequences
-
-The control plane adds release management and compatibility work.
-
-A source workflow and its generated lock file must stay synchronized.
-
-Consumers do not receive a workflow change until they update to an approved version.
-
-Repository-specific gates remain necessary when a shared profile cannot express the local contract.
-
-A governance statement may still require a stronger executable control when observed failures show that prose is insufficient.
+- Agentic workflows may analyze evidence and propose actions but cannot accept their own output.
+- Deterministic verification controls automated acceptance.
+- Protected transitions require human authority even after verification succeeds.
+- Candidate identity changes invalidate prior verification.
+- Repository-specific consumer gates remain authoritative for consumer acceptance.
+- Complete failure stops fix-forward on the failed candidate and preserves the failure as successor evidence.

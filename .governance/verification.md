@@ -2,92 +2,71 @@
 
 ## Purpose
 
-Define the acceptance contract for deterministic CI/CD and workflow catalog changes.
+Define what evidence establishes correctness for the exact candidate and which verifier may decide acceptance.
 
-## Acceptance invariant
+## Acceptance Invariant
 
-The verifier decides `PASS` or `FAIL`.
+The verifier selected by the active task contract decides whether required evidence establishes `PASS` or `FAIL` within its jurisdiction.
 
-The model does not decide `PASS` or `FAIL`.
+The proposer, executor, coding agent, or agentic workflow does not decide acceptance of its own output.
 
-## Candidate identity
+Testing results are inputs to verification. Testing is not verification.
 
-Bind verification to the exact candidate.
+## Candidate Identity
+
+Bind every verification result to the exact candidate.
 
 Record at least:
 
-- Repository.
-- Commit SHA or materialized candidate digest before commit.
-- Changed path set.
-- Workflow source SHA-256 when an agentic workflow source changed.
-- Compiled `.lock.yml` SHA-256 when a lock file exists.
-- `.github/aw/actions-lock.json` SHA-256 when that file is applicable.
-- Verifier version or command identity.
+- repository or materialized candidate identity;
+- base identity;
+- candidate digest or commit SHA;
+- changed path set;
+- required generated-artifact identities when applicable;
+- verifier identity, version, or command;
+- required test/check identities and results.
 
-If candidate identity changes after verification, the prior result does not accept the new candidate.
+Any mutation after verification invalidates that verification for the new candidate.
 
-## Required gate properties
+## Oracle Requirements
 
-A deterministic gate must be repeatable for the same declared software, toolchain, and controlled inputs.
+A verifier must use the oracle or acceptance predicates designated by the active contract.
 
-A deterministic gate must contain a meaningful oracle that can fail when the target contract is violated.
+The oracle must be capable of rejecting a candidate that violates the target contract.
 
-Do not use assertion-free, tautological, or unrelated checks as acceptance evidence.
+Do not substitute model confidence, coverage percentage, compilation alone, lexical matching alone, or an unrelated passing check for the required oracle.
 
-Do not use coverage percentage as proof of correctness.
+Return `BLOCKED` when the required trusted verifier or semantic comparator is unavailable.
 
-Use behavior-specific tests for the required contract.
+## Governance Bootstrap Cases
 
-## Public-surface verification
+A governance-bootstrap verifier must be able to reject at least these conditions when applicable:
 
-Evaluate public-surface invariants against the materialized baseline and candidate.
+1. a route references a missing task contract;
+2. `AGENTS.md` performs task classification instead of routing to `CONTEXT.md`;
+3. a code-capable route can mutate before Engineering Rules readiness;
+4. testing success directly becomes completion `PASS` without verification;
+5. evidence changes candidate identity or rebinds a result to another candidate;
+6. a verifier result manufactures human or remote-write authority;
+7. an authorized mutation is treated as unexpected repository drift;
+8. unexpected or concurrent drift is allowed to continue;
+9. a stale verification result accepts a changed candidate;
+10. `CLAUDE.md` contains independent governance instead of only `@AGENTS.md`.
 
-Use a language-aware deterministic parser, schema comparator, or equivalent semantic verifier.
+Preserve valid predecessor acceptance cases unless an authoritative requirement proves them wrong.
 
-Do not use lexical patch matching as the sole public-surface verifier.
+## Agentic Workflow Verification
 
-Return `BLOCKED` when no trusted comparator exists for the affected artifact type.
+For a new or changed agentic workflow, verify both the source contract and the compiled execution contract when compilation applies.
 
-## Agentic workflow verification
+Do not accept an agentic workflow only because it compiles.
 
-For a new or changed agentic workflow, verify the source contract and compiled execution contract.
-
-For a frontmatter change:
-
-1. Compile the workflow with the approved `gh aw` version.
-2. Require compile success.
-3. Review the generated `.lock.yml` diff.
-4. Verify that generated action references are immutable.
-5. Verify that permissions and safe outputs match the source contract.
-
-For a body-only change:
-
-1. Run compile verification.
-2. Verify the instruction change against the workflow acceptance cases.
-
-Do not accept a workflow only because it compiles.
-
-## Frozen governance acceptance cases
-
-Runtime governance must preserve deterministic cases for these failures:
-
-1. Reject an incomplete active contract.
-2. Reject a review-repair mutation that violates required predicates.
-3. Reject an out-of-scope read.
-4. Keep post-action evidence bound to the accepted proposal contract.
-5. Reject false mandatory review-repair predicates.
-6. Reject Python public-surface growth at net-zero lines.
-7. Reject a symlink path that resolves outside the repository.
-8. Reject a post-action result without its exact accepted proposal.
-
-Do not remove or weaken a valid frozen case to make a candidate pass.
-
-## Independent verification unavailable
+## Independent Verification Unavailable
 
 When required independent verification is unavailable:
 
-- Return `BLOCKED`.
-- Preserve the candidate.
-- Report that a candidate exists but is not accepted.
-- Use a deterministic local gate only when the governing contract designates that gate as acceptance authority.
-- Request human authorization before substituting a different verifier.
+- return `BLOCKED`;
+- preserve the candidate;
+- report that a candidate exists but is not accepted;
+- use a deterministic local gate as acceptance authority only when the active contract explicitly designates it;
+- require human authorization before substituting a different verifier.

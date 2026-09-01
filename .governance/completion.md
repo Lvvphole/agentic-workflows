@@ -2,45 +2,50 @@
 
 ## Purpose
 
-Define terminal states and completion requirements.
+Define terminal states and the conditions under which an active task may be called done.
 
 ## PASS
 
-Use `PASS` only when all required deterministic gates pass for the exact candidate identity.
+Use `PASS` only when the verifier selected by the active task contract accepts all required evidence for the exact final candidate and no completion condition is missing.
 
-A `PASS` record must identify the applicable verifier evidence.
+A `PASS` record must identify the exact candidate and verifier evidence.
+
+The proposer does not self-certify `PASS`.
 
 ## FAIL
 
-Use `FAIL` when a required deterministic gate ran and rejected the exact candidate.
+Use `FAIL` when a required acceptance authority or deterministic gate runs and rejects the exact candidate under the active contract.
 
 Preserve the failing evidence.
 
-A complete failure remains `FAIL` even after its evidence becomes a successor learning corpus.
+A complete-failure predecessor remains `FAIL` even when its evidence becomes successor acceptance criteria.
 
 ## BLOCKED
 
-Use `BLOCKED` when required authority, evidence, repository state, or verification is unavailable.
+Use `BLOCKED` when required authority, contract state, admitted input, engineering-rules readiness, repository state, testing, evidence, or verification is unavailable or invalid.
 
 `BLOCKED` is not `PASS`.
 
-## Candidate produced
+## Candidate Produced
 
-A produced file, patch, workflow, review, or repair is a candidate.
+A produced file, patch, workflow, review, repair, or materialized governance tree is a candidate.
 
-A candidate is not accepted until the applicable acceptance authority accepts it.
+A candidate is not accepted merely because it exists, was committed, was pushed, compiled, passed local tests, or received a model review.
 
-A successor after complete failure is a new candidate and requires fresh verification.
+## Completion Conditions
 
-## Completion conditions
+Do not report completion until:
 
-Do not report the task as complete until:
+- the active task contract is identified and valid;
+- authorized scope is unchanged or an authorized scope change is recorded;
+- required Engineering Rules readiness was satisfied before code-capable mutation;
+- required deterministic checks ran on the exact final candidate;
+- required generated artifacts are synchronized with source;
+- the required verifier evaluated the exact final candidate;
+- no required gate or verifier state is `FAIL` or `BLOCKED` for a claimed `PASS`;
+- required evidence is preserved and bound to the final candidate;
+- no remote or protected state transition occurred without required authority.
 
-- The authorized path set is unchanged or an authorized scope change is recorded.
-- Required deterministic checks ran on the exact candidate.
-- Required generated artifacts are synchronized with their source.
-- No required gate is `FAIL` or `BLOCKED`.
-- Required evidence is preserved.
-- No protected state transition occurred without authority.
+Any mutation after verification invalidates that verification and prevents completion until the new exact candidate is re-verified.
 
-When any condition is not satisfied, report the actual terminal state and missing condition.
+When any condition is unsatisfied, report the actual terminal state and the missing condition.

@@ -2,68 +2,69 @@
 
 ## Purpose
 
-Use this file as the workspace task and context router.
+This file routes repository tasks.
 
-Classify the current task before loading deeper repository context.
+It determines:
 
-Load only the smallest sufficient context for the selected route.
+- the task route;
+- whether the task is code-capable;
+- the applicable task contract.
 
-This file does not grant authority. `AGENTS.md` governs coding-agent behavior, and the routed authoritative sources govern their own jurisdictions.
+Routing does not grant authority.
 
-## Context model
+The selected task contract defines the authorized task envelope.
 
-- Layer 0: coding-agent entry instructions load repository governance.
-- Layer 1: this root `CONTEXT.md` selects the workspace task route.
-- Layer 2: an active task, workflow, or stage `CONTEXT.md` defines stage-specific inputs, process, outputs, and bounds when one exists.
-- Layer 3: routed governance, architecture, contracts, and references provide persistent authoritative context.
-- Layer 4: diffs, findings, run logs, candidate artifacts, and other per-run material provide working evidence.
+Do not load unrelated context.
 
-Treat Layer 3 according to its declared authority.
+## Entry
 
-Treat Layer 4 as working input unless an applicable verifier promotes it to `VERIFIED` evidence.
+Before substantive work:
 
-## Routing procedure
+1. Read `AGENTS.md`.
+2. Classify the task.
+3. Select one task contract.
+4. Read the inputs specified by that contract.
 
-1. Read the explicit human task.
-2. Inspect only enough current repository state to classify the task.
-3. Select exactly one primary route below.
-4. Add another route only when the task necessarily crosses jurisdictions.
-5. Read only the sources named by the selected route and any nested `CONTEXT.md` that route explicitly admits.
-6. Do not preload unrelated governance, references, histories, or working artifacts.
-7. Return `BLOCKED` when the route, authority, or required context cannot be resolved without guessing.
+If the task cannot be classified deterministically, return `BLOCKED`.
 
 ## Routes
 
-| Route | Use when | Load |
-| --- | --- | --- |
-| `READ_ONLY` | Inspect, diagnose, scout, explain, or gather evidence without repository mutation. | `.governance/authority.md`, `.governance/evidence.md`, and only the repository artifacts needed to answer the task. |
-| `MUTATION` | Change any repository artifact when no more specific route applies. | `.governance/authority.md`, `.governance/execution.md`, `.governance/security.md`, `.governance/verification.md`, `.governance/evidence.md`, `.governance/completion.md`, the active task contract, and affected artifacts. |
-| `BUG_FIX` | Correct a verified defect in existing behavior. | `MUTATION`, the exact defect evidence, the affected behavioral contract, the required regression oracle, and predecessor evidence. |
-| `REVIEW_REPAIR` | Repair one accepted review finding. | `MUTATION`, the exact accepted finding, predecessor candidate evidence, and the active repair envelope. |
-| `DETERMINISTIC_CI_CD` | Change deterministic CI, CD, deployment, build, test, security, or verification behavior. | `MUTATION`, `ARCHITECTURE.md`, the active deterministic pipeline contract, and affected deterministic tests. |
-| `AGENTIC_WORKFLOW` | Change an agentic workflow, runtime policy, compiled workflow contract, or agentic acceptance case. | `MUTATION`, `ARCHITECTURE.md`, `.governance/releases.md`, the active workflow contract, and its acceptance cases. |
-| `RELEASE_CONSUMER` | Publish a catalog version or update a consuming repository to a catalog version. | `.governance/authority.md`, `.governance/releases.md`, `.governance/security.md`, `.governance/verification.md`, `.governance/evidence.md`, and the consumer acceptance contract. |
-| `GOVERNANCE_ARCHITECTURE` | Change coding-agent governance, context routing, authority, architecture, or protected contracts. | `.governance/authority.md`, the affected governing source, `.governance/verification.md`, `.governance/evidence.md`, and applicable architecture. |
-| `COMPLETE_FAILURE` | An authoritative verifier or explicit human decision declares a mutation a complete failure. | `MUTATION`, `ARCHITECTURE.md`, the failed candidate identity, frozen failure evidence, predecessor acceptance evidence, and the redesign contract. |
+| Route | Use | Task Contract | Code-Capable |
+| --- | --- | --- | --- |
+| `READ_ONLY` | Inspection, diagnosis, evidence review, or review without mutation | `.harness/contracts/read-only.md` | No |
+| `GOVERNANCE_BOOTSTRAP` | Establish or repair governance before baseline acceptance | `.harness/contracts/governance-bootstrap.md` | Conditional |
+| `GOVERNANCE_ARCHITECTURE` | Change accepted governance structure or control boundaries | `.harness/contracts/governance-architecture.md` | Conditional |
+| `MUTATION` | Authorized mutation without a more specific route | `.harness/contracts/mutation.md` | Conditional |
+| `BUG_FIX` | Repair a verified behavioral defect | `.harness/contracts/bug-fix.md` | Yes |
+| `REVIEW_REPAIR` | Address an accepted review finding | `.harness/contracts/review-repair.md` | Yes |
+| `DETERMINISTIC_CI_CD` | Change CI, CD, build, test, deployment, or deterministic gate logic | `.harness/contracts/deterministic-ci-cd.md` | Yes |
+| `AGENTIC_WORKFLOW` | Change agent workflows, harnesses, hooks, middleware, or execution policy | `.harness/contracts/agentic-workflow.md` | Yes |
+| `RELEASE_CONSUMER` | Create a release or change consumer adoption | `.harness/contracts/release-consumer.md` | Conditional |
+| `COMPLETE_FAILURE` | Process a complete failure established by the active authority | `.harness/contracts/complete-failure.md` | Conditional |
 
-## Nested context
+Use the most specific applicable route.
 
-When a routed stage or subsystem contains its own `CONTEXT.md`, read it only after the root route selects that stage or subsystem.
+## Code-Capable Tasks
 
-A nested `CONTEXT.md` may narrow inputs, process, outputs, and bounds for its scope.
+A task is code-capable if it can create or change:
 
-A nested `CONTEXT.md` cannot expand human authority or weaken repository governance.
+- code;
+- tests;
+- schemas;
+- migrations;
+- build logic;
+- CI/CD logic;
+- harness logic.
 
-Do not create stage directories or nested context files until an accepted increment requires them.
+For a code-capable task, use the Engineering Rules route specified by the active task contract.
 
-## Route boundaries
+Do not mutate code until that route permits construction.
 
-Routing selects context. It does not decide acceptance.
+## Routing Invariants
 
-A route cannot expand explicit human scope.
-
-A route cannot turn `OBSERVED` or `INFERRED` material into `VERIFIED` evidence.
-
-A route cannot authorize merge, release, production deployment, credential changes, branch-protection changes, or other protected state transitions.
-
-Use `PASS`, `FAIL`, and `BLOCKED` only under the applicable acceptance and completion rules.
+- Routing does not grant authority.
+- Select exactly one active task contract.
+- Use the most specific applicable route.
+- Load only context specified by the active contract.
+- `CONTEXT.md` cannot enlarge the active contract.
+- If required routing information is unavailable, return `BLOCKED`.

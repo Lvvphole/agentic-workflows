@@ -4,52 +4,40 @@
 
 Define how the central workflow catalog publishes versions and how consumers update them.
 
-## Version policy
+## Version Policy
 
 Publish stable workflow packages with semantic release tags.
 
-Use an exact release tag or commit SHA for a production consumer.
+Use an exact release tag or commit SHA for a production consumer. Do not use `main` as a production consumer pin.
 
-Do not use `main` as a production consumer pin.
+A moving major ref may be used only when the consumer update process still requires an explicit reviewed update.
 
-A moving major ref can be used only when the consumer update process still requires an explicit reviewed update.
-
-## Release gate
+## Release Gate
 
 Before a release:
 
-1. Verify all required deterministic catalog checks.
-2. Verify all changed agentic workflow acceptance cases.
-3. Compile every changed agentic workflow that requires compilation.
-4. Review changed `.lock.yml` files.
-5. Review changed `.github/aw/actions-lock.json` content.
-6. Record the exact release candidate commit SHA.
-7. Confirm that no required gate is FAIL or BLOCKED.
+1. verify all required deterministic catalog checks;
+2. verify changed agentic workflow acceptance cases;
+3. compile every changed workflow when compilation is required;
+4. review changed generated lock files;
+5. record the exact release candidate identity;
+6. confirm no required gate is `FAIL` or `BLOCKED`;
+7. confirm explicit release authority.
 
-Do not publish from an unverified working tree or an unaccepted commit.
+Do not publish from an unverified working tree or unaccepted commit.
 
 ## Compatibility
 
-Use a major version change for an incompatible consumer contract change.
+Use a major version change for an incompatible consumer contract change, a minor version for a backward-compatible capability addition, and a patch version for a backward-compatible correction.
 
-Use a minor version change for a backward-compatible capability addition.
+Do not silently change an immutable release tag.
 
-Use a patch version change for a backward-compatible correction.
+## Consumer Updates
 
-Do not silently change the behavior of an existing immutable release tag.
+A consuming repository must review a workflow update before adoption and run its own deterministic gates.
 
-## Consumer updates
-
-A consuming repository must review a workflow update before adoption.
-
-Run the consuming repository's deterministic gates on the updated workflow version.
-
-The central catalog PASS does not replace the consuming repository's local acceptance contract.
+Central catalog acceptance does not replace the consuming repository's local acceptance contract.
 
 ## Rollback
 
-Rollback means selecting a previously accepted immutable version.
-
-Do not repair a bad release tag in place.
-
-Publish a new version for a correction.
+Rollback selects a previously accepted immutable version. Do not repair a bad release tag in place; publish a new corrected version.
