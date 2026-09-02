@@ -28,7 +28,7 @@ Address one accepted review finding within a bounded repair envelope.
 
 ## Engineering Rules
 
-- **Applicability:** Yes
+- **Applicability:** Conditional — required only when the accepted finding's repair is code-capable under `CONTEXT.md`.
 - Resolve the canonical engineering-rules authority through `.governance/authority.md` when the task is code-capable.
 - Verify the required identity, read the canonical rules, and satisfy the Pre-Code Readiness Gate before code-capable mutation.
 - If the authority is missing or the gate is unsatisfied, return `BLOCKED`.
@@ -37,7 +37,7 @@ Address one accepted review finding within a bounded repair envelope.
 
 1. Confirm the finding is accepted by the task authority or active review contract.
 2. Freeze one finding as the repair target.
-3. Complete Engineering Rules readiness.
+3. Complete Engineering Rules readiness when the repair is code-capable.
 4. Perform only the bounded repair.
 5. Run the finding-specific check and required regression checks.
 6. Stop when the repair bound is exhausted or another stop condition fires.

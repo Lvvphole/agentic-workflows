@@ -36,7 +36,7 @@ If the task cannot be classified deterministically, return `BLOCKED`.
 | `GOVERNANCE_ARCHITECTURE` | Change accepted governance structure or control boundaries | `.harness/contracts/governance-architecture.md` | Conditional |
 | `MUTATION` | Authorized mutation without a more specific route | `.harness/contracts/mutation.md` | Conditional |
 | `BUG_FIX` | Repair a verified behavioral defect | `.harness/contracts/bug-fix.md` | Yes |
-| `REVIEW_REPAIR` | Address an accepted review finding | `.harness/contracts/review-repair.md` | Yes |
+| `REVIEW_REPAIR` | Address an accepted review finding | `.harness/contracts/review-repair.md` | Conditional |
 | `DETERMINISTIC_CI_CD` | Change CI, CD, build, test, deployment, or deterministic gate logic | `.harness/contracts/deterministic-ci-cd.md` | Yes |
 | `AGENTIC_WORKFLOW` | Change agent workflows, harnesses, hooks, middleware, or execution policy | `.harness/contracts/agentic-workflow.md` | Yes |
 | `RELEASE_CONSUMER` | Create a release or change consumer adoption | `.harness/contracts/release-consumer.md` | Conditional |
