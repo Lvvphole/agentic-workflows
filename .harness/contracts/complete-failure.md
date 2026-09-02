@@ -31,10 +31,9 @@ Process a complete failure without fix-forward and convert frozen failure eviden
 
 ## Engineering Rules
 
-- **Applicability:** Conditional — required for code-capable successor construction.
-- Resolve the canonical engineering-rules authority through `.governance/authority.md` when the task is code-capable.
-- Verify the required identity, read the canonical rules, and satisfy the Pre-Code Readiness Gate before code-capable mutation.
-- If the authority is missing or the gate is unsatisfied, return `BLOCKED`.
+- **Applicability:** No for failure-processing steps.
+- Before any code-capable successor construction, end `COMPLETE_FAILURE` and route the successor through `CONTEXT.md` to exactly one new active task contract.
+- The successor task contract owns Engineering Rules authority resolution, identity verification, and the Pre-Code Readiness Gate.
 
 ## Process
 
@@ -43,19 +42,22 @@ Process a complete failure without fix-forward and convert frozen failure eviden
 3. Freeze failure evidence before successor construction.
 4. Require explicit human authority before any remote close, branch, push, or pull-request transition.
 5. Redesign from the last accepted base and frozen evidence.
-6. Complete Engineering Rules readiness before any code-capable successor construction.
-7. Verify the exact successor before any separately authorized publication.
+6. Before any successor mutation, code-capable construction, or verification, end `COMPLETE_FAILURE` and route the successor through `CONTEXT.md` to exactly one new active task contract.
+7. Pass the frozen failure corpus and successor acceptance criteria as admitted working inputs. The successor task contract owns Engineering Rules readiness, construction, testing, verification, evidence, completion, and any separately authorized publication.
 
 ## Outputs
 
 - immutable failure corpus;
 - successor acceptance criteria;
-- successor candidate when authorized;
-- fresh successor verification evidence.
+- successor handoff for `CONTEXT.md` routing.
 
 ## Verifier
 
-The verifier designated by the successor task contract. The failed predecessor remains `FAIL` and cannot be retroactively accepted.
+A deterministic verifier designated by this contract or its authorized task instance verifies the frozen failure corpus and successor handoff before `COMPLETE_FAILURE` completes.
+
+After `CONTEXT.md` activates the successor task contract, that active contract selects the verifier for successor construction and acceptance.
+
+The failed predecessor remains `FAIL` and cannot be retroactively accepted.
 
 ## Stop Conditions
 
