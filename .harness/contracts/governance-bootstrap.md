@@ -8,13 +8,7 @@ Establish or repair the governance baseline before that baseline is accepted as 
 
 ### Governing
 
-- `.governance/authority.md`
-- `.governance/execution.md`
-- `.governance/security.md`
-- `.governance/testing.md`
-- `.governance/verification.md`
-- `.governance/evidence.md`
-- `.governance/completion.md`
+- externally accepted bootstrap task and authority envelope
 
 ### Reference
 
@@ -24,16 +18,17 @@ Establish or repair the governance baseline before that baseline is accepted as 
 
 ### Working
 
-- current governance candidate;
+- current governance candidate, including `.governance/authority.md`, `.governance/execution.md`, `.governance/security.md`, `.governance/testing.md`, `.governance/verification.md`, `.governance/evidence.md`, and `.governance/completion.md`;
 - frozen bootstrap defects and acceptance cases;
 - materialized successor candidate.
 
 ## Engineering Rules
 
 - **Applicability:** Conditional — required when the bootstrap creates or changes code, tests, schemas, migrations, build logic, CI/CD logic, or harness logic.
-- Resolve the canonical engineering-rules authority through `.governance/authority.md` when the task is code-capable.
+- For code-capable bootstrap work, resolve the canonical engineering-rules authority through the externally accepted bootstrap task and authority envelope.
+- Treat candidate `.governance/authority.md` only as Working input until the bootstrap baseline is accepted.
 - Verify the required identity, read the canonical rules, and satisfy the Pre-Code Readiness Gate before code-capable mutation.
-- If the authority is missing or the gate is unsatisfied, return `BLOCKED`.
+- If the external authority is missing or the gate is unsatisfied, return `BLOCKED`.
 
 ## Process
 
