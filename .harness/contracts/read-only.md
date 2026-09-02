@@ -10,6 +10,7 @@ Inspect, diagnose, explain, review, or gather evidence without repository mutati
 
 - `.governance/authority.md`
 - `.governance/evidence.md`
+- `.governance/completion.md`
 
 ### Reference
 
@@ -39,7 +40,11 @@ Inspect, diagnose, explain, review, or gather evidence without repository mutati
 
 ## Verifier
 
-No acceptance result is produced unless the explicit read-only task separately designates a verifier.
+Use a verifier explicitly designated by the read-only task when one exists.
+
+Otherwise, the explicit human requester is the acceptance authority for the exact read-only output. Task issuance, silence, or tool access does not imply acceptance.
+
+While required human acceptance is pending, report `BLOCKED` because required verification is unavailable. After explicit human acceptance of the exact output, `PASS` may be recorded. Explicit human rejection or a rejecting designated verifier yields `FAIL` when `.governance/completion.md` applies.
 
 ## Stop Conditions
 
