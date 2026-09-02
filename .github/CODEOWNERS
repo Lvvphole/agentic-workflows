@@ -1,0 +1,13 @@
+* @Lvvphole
+
+/AGENTS.md @Lvvphole
+/ARCHITECTURE.md @Lvvphole
+/.governance/ @Lvvphole
+/.github/CODEOWNERS @Lvvphole
+/.github/workflows/ @Lvvphole
+/.github/aw/ @Lvvphole
+/aw.yml @Lvvphole
+/workflows/ @Lvvphole
+/shared/ @Lvvphole
+/payload/ @Lvvphole
+/tests/ @Lvvphole

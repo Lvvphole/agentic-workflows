@@ -1,0 +1,12 @@
+{
+  "engineering-rules/SKILL.md": {
+    "sha256": "deb95b212e0d3fae948e6cd0b9b932ede58cbaeef0170ccc8257b7a80a117793",
+    "source": "user-supplied canonical engineering-rules skill artifact",
+    "required_before_code_capable_use": true
+  },
+  "engineering-rules/scripts/check.py": {
+    "sha256": "0c8ba9a02dd5dfc99660ce12f2503727df595fd89a97ec73d91a8d6afe3b7822",
+    "source": "user-supplied canonical engineering-rules deterministic gate artifact",
+    "required_when_active_contract_requires_gate": true
+  }
+}
