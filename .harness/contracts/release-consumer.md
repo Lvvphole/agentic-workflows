@@ -9,6 +9,7 @@ Publish an accepted catalog version or update a consuming repository to an accep
 ### Governing
 
 - `.governance/authority.md`
+- `.governance/execution.md`
 - `.governance/security.md`
 - `.governance/testing.md`
 - `.governance/verification.md`
