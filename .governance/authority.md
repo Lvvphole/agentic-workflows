@@ -29,12 +29,12 @@ For code-capable work, the canonical engineering-rules authority is the content-
 Expected canonical document identity:
 
 - logical location: `engineering-rules/SKILL.md`
-- SHA-256: `b17fe4f491dd5c2dc5d3edda5c02147492aca81cafb956f7e02d69069e8217fb`
+- SHA-256: `deb95b212e0d3fae948e6cd0b9b932ede58cbaeef0170ccc8257b7a80a117793`
 
 Expected deterministic gate identity:
 
 - logical location: `engineering-rules/scripts/check.py`
-- SHA-256: `442f76990f8037d5e680a07a4283cb3f5be9e8bb93801306c74a6c26eef6ba75`
+- SHA-256: `0c8ba9a02dd5dfc99660ce12f2503727df595fd89a97ec73d91a8d6afe3b7822`
 
 Before code-capable mutation, the active task contract must resolve the canonical document, verify the required identity when available, read it, and satisfy its Pre-Code Readiness Gate.
 
